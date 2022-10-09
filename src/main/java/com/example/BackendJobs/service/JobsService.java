@@ -2,7 +2,6 @@ package com.example.BackendJobs.service;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.BackendJobs.model.Jobs;
 import com.example.BackendJobs.repository.JobsRepository;
-
 import com.example.BackendJobs.util.Status;
 
 @Service
