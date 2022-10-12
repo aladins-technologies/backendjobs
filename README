@@ -1,0 +1,39 @@
+Backend Jobs
+------------
+*)Application to list and monitor Backend Jobs.
+*)Features completed
+	1)List the jobs with pagination, 10 per page.
+	2)By default sort, the jobs fetched by date.
+	3)An endpoint to fetch all jobs based on status.
+	4)An endpoint to fetch jobs based on job id.
+	5)An endpoint to change the status of a job based on job id.
+	6)An API endpoint to delete multiple jobs simultaneously.
+	7)Implemented Swagger for API documentation.
+
+Features pending
+
+Future enhancements
+	1)Role-based access, the admin would be able to kill a job(change the status to kill) other users can just rerun the job.
+
+*)A backend jobs have 
+	1)Job Id
+	2)Name
+	3)Description
+	4)Status(RUN, RERUN, KILL, RUNNING)
+	5)Start date(Datetime)
+	6)End date(Datetime)
+	7)Updated date(Datetime)
+	8)Errors(Number of errors in the job)
+	9)IsActiveFlag
+
+*)The source code of this Application can be found at Github, Link : https://github.com/favaz0/backendjobs
+*)Use Postman script file(Backend Jobs Application - AWS.postman_collection.json) to test this Application, it is availabe in the same Github repository.
+*)URL for application : http://backendjobs-env-1.eba-yczzgw4i.ap-northeast-1.elasticbeanstalk.com/jobs/getAll?pageNumber=0
+*)URL for Swagger : http://backendjobs-env-1.eba-yczzgw4i.ap-northeast-1.elasticbeanstalk.com/swagger-ui/index.html
+
+Technology used
+---------------
+	1)Java
+	2)SpringBoot
+	3)Mysql/Oracle Db
+	4)AWS

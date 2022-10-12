@@ -72,6 +72,14 @@ public class JobsService {
     	return "Job " + job.getJobName() + " deleted successfully!";
     }
 	
+	public String createNewJob(Jobs job) {
+		Jobs newJob = jobsRepo.save(job);
+		if(newJob.getJobId() <= 0) {
+			return "Failed to create new Job";
+		}
+		return "New Job " + newJob.getJobName() + " created with ID " + newJob.getJobId();
+	}
+	
 	public void save(Jobs job) {
 		jobsRepo.save(job);
 	}

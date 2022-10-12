@@ -23,9 +23,14 @@ public class JobsController {
 	@Autowired
 	private JobsService jobsService;
 	
+	@GetMapping("/home")
+    public String home() {
+		return "Welcome to Backend Job Application";
+    }
+	
 	@PostMapping("/createJob")
-	public void createJob(@RequestBody Jobs job) {
-		jobsService.save(job);
+	public String createJob(@RequestBody Jobs job) {
+		return jobsService.createNewJob(job);
 	}
 	
 	@GetMapping("/getAll")
