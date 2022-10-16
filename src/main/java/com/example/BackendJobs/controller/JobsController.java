@@ -1,10 +1,11 @@
 package com.example.BackendJobs.controller;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.BackendJobs.exception.InvalidIdException;
+import com.example.BackendJobs.exception.InvalidPageException;
+import com.example.BackendJobs.exception.InvalidStatusException;
+import com.example.BackendJobs.exception.JobsException;
+import com.example.BackendJobs.exception.JobsNotFoundException;
 import com.example.BackendJobs.model.Jobs;
 import com.example.BackendJobs.service.JobsService;
 
@@ -23,53 +29,160 @@ public class JobsController {
 	@Autowired
 	private JobsService jobsService;
 	
-	@GetMapping("/home")
-    public String home() {
-		return "Welcome to Backend Job Application";
-    }
-	
 	@PostMapping("/createJob")
-	public String createJob(@RequestBody Jobs job) {
-		return jobsService.createNewJob(job);
+	public ResponseEntity<?> createJob(@RequestBody Jobs job) {
+		Jobs newJob = null;
+		try {
+			newJob = jobsService.createNewJob(job);
+		} catch(JobsException e) {
+			throw e;
+		} catch(Exception e) {
+			return new ResponseEntity<>("Unable to create new Job", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(newJob, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/getAll")
-    public Page<Jobs> getAll(@RequestParam int pageNumber) {
-		return jobsService.listAll(pageNumber);
+    public ResponseEntity<?> getAll(@RequestParam int pageNumber) {
+		Page<Jobs> jobPage = null;
+		try {
+			jobPage = jobsService.listAll(pageNumber);
+			if(jobPage != null && jobPage.getNumberOfElements() <= 0) {					//elements in selected page
+				if(jobPage.getTotalElements() > 0) {
+					throw new InvalidPageException("Requested page not available");
+				}
+				throw new JobsNotFoundException("No available Jobs");
+			}
+			
+		} catch(JobsException e) {
+			throw e;
+		} catch(Exception e) {
+			return new ResponseEntity<>("Unable to find available Jobs", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(jobPage, HttpStatus.OK);
     }
 	
 	@GetMapping("/getById")
-    public Jobs getById(@RequestParam long id) {
-		return jobsService.getById(id);
+    public ResponseEntity<?> getById(@RequestParam long id) {
+		Jobs job = null;
+		try {
+			if(id < 1000){
+				throw new InvalidIdException("Please provide a valid ID");
+			}
+			job = jobsService.getById(id);
+		} catch(JobsException e) {
+			throw e;
+		} catch(Exception e) {
+			return new ResponseEntity<>("Unable to find available Jobs", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(job, HttpStatus.FOUND);
     }
 	
 	@GetMapping("/getByStatus")
-    public List<Jobs> getByStatus(@RequestParam int status, @RequestParam int pageNumber) {
-		return jobsService.listByStatus(status, pageNumber);
+    public ResponseEntity<?> getByStatus(@RequestParam int status, @RequestParam int pageNumber) {
+		Page<Jobs> jobPage = null;
+		try {
+			if(status > 3 || status < 0){
+				throw new InvalidStatusException("Please provide a valid Status");
+			}
+			jobPage = jobsService.listByStatus(status, pageNumber);
+			if(jobPage != null && jobPage.getNumberOfElements() <= 0) {				//elements in selected page
+				if(jobPage.getTotalElements() > 0) {
+					throw new InvalidPageException("Requested page not available");
+				}
+				throw new JobsNotFoundException("No available Jobs");
+			}
+		} catch(JobsException e) {
+			throw e;
+		} catch(Exception e) {
+			return new ResponseEntity<>("Unable to find available Jobs", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(jobPage, HttpStatus.FOUND);
     }
 	
 	@GetMapping("/getByIsActive")
-    public List<Jobs> getByIsActive(@RequestParam boolean isActive, @RequestParam int pageNumber) {
-		return jobsService.listByIsActive(isActive, pageNumber);
+    public ResponseEntity<?> getByIsActive(@RequestParam boolean isActive, @RequestParam int pageNumber) {
+		Page<Jobs> jobPage = null;
+		try {
+			jobPage = jobsService.listByIsActive(isActive, pageNumber);
+			if(jobPage != null && jobPage.getNumberOfElements() <= 0) {				//elements in selected page
+				if(jobPage.getTotalElements() > 0) {
+					throw new InvalidPageException("Requested page not available");
+				}
+				throw new JobsNotFoundException("No available Jobs");
+			}
+		} catch(JobsException e) {
+			throw e;
+		} catch(Exception e) {
+			return new ResponseEntity<>("Unable to find available Jobs", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(jobPage, HttpStatus.FOUND);
     }
 	
 	@GetMapping("/getByStartDate")
-    public List<Jobs> getByStartDate(@RequestParam Timestamp startDate, @RequestParam int pageNumber) {
-		return jobsService.listByStartDate(startDate, pageNumber);
+    public ResponseEntity<?> getByStartDate(@RequestParam Timestamp startDate, @RequestParam int pageNumber) {
+		Page<Jobs> jobPage = null;
+		try {
+			jobPage = jobsService.listByStartDate(startDate, pageNumber);
+			if(jobPage != null && jobPage.getNumberOfElements() <= 0) {				//elements in selected page
+				if(jobPage.getTotalElements() > 0) {
+					throw new InvalidPageException("Requested page not available");
+				}
+				throw new JobsNotFoundException("No available Jobs");
+			}
+		} catch(JobsException e) {
+			throw e;
+		} catch(Exception e) {
+			return new ResponseEntity<>("Unable to find available Jobs", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(jobPage, HttpStatus.FOUND);
     }
 	
 	@GetMapping("/getByEndDate")
-    public List<Jobs> getByEndDate(@RequestParam Timestamp endDate, @RequestParam int pageNumber) {
-		return jobsService.listByEndDate(endDate, pageNumber);
+    public ResponseEntity<?> getByEndDate(@RequestParam Timestamp endDate, @RequestParam int pageNumber) {
+		Page<Jobs> jobPage = null;
+		try {
+			jobPage = jobsService.listByEndDate(endDate, pageNumber);
+			if(jobPage != null && jobPage.getNumberOfElements() <= 0) {				//elements in selected page
+				if(jobPage.getTotalElements() > 0) {
+					throw new InvalidPageException("Requested page not available");
+				}
+				throw new JobsNotFoundException("No available Jobs");
+			}
+		} catch(JobsException e) {
+			throw e;
+		} catch(Exception e) {
+			return new ResponseEntity<>("Unable to find available Jobs", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(jobPage, HttpStatus.FOUND);
     }
 	
 	@PutMapping("/updateJobStatus")
-	public String updateJobStatus(@RequestParam long id, @RequestParam int status) {
-		return jobsService.updateStatus(id, status);
+	public ResponseEntity<?> updateJobStatus(@RequestParam long id, @RequestParam int status) {
+		Jobs newJob = null;
+		try {
+			if(status > 3 || status < 0){
+				throw new InvalidStatusException("Please provide a valid Status");
+			}
+			newJob = jobsService.updateStatus(id, status);
+		} catch(JobsException e) {
+			throw e;
+		} catch(Exception e) {
+			return new ResponseEntity<>("Unable update Job status", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(newJob, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/deleteById")
-	public String deleteById(@RequestParam long id) {
-		return jobsService.deleteById(id);
+	public ResponseEntity<?> deleteById(@RequestParam long id) {
+		String msg = "";
+		try {
+			msg = jobsService.deleteById(id);
+		} catch(JobsException e) {
+			throw e;
+		} catch(Exception e) {
+			return new ResponseEntity<>("Unable delete Job", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(msg, HttpStatus.OK);
 	}
 }
