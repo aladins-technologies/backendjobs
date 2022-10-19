@@ -1,4 +1,4 @@
-package com.example.BackendJobs.exception;
+package com.example.BackendJobs.Exception;
 
 public class InvalidPageException extends JobsException {
 

@@ -1,4 +1,4 @@
-package com.example.BackendJobs.model;
+package com.example.BackendJobs.Model;
 
 import java.sql.Timestamp;
 
@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.example.BackendJobs.util.Status;
+import com.example.BackendJobs.Util.Status;
 
 @Entity
 public class Jobs {

@@ -1,4 +1,4 @@
-package com.example.BackendJobs.util;
+package com.example.BackendJobs.Util;
 
 public enum Status {
 	RUN,

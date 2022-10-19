@@ -1,4 +1,4 @@
-package com.example.BackendJobs.config;
+package com.example.BackendJobs.Config;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 
