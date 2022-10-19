@@ -116,19 +116,19 @@ public class JobsService {
 			throw new InvalidIdException("Requested Job not found in server");
 		}
 		boolean updated = false;
-		if(!job.getJobName().equals(updateDto.getJobName())) {
+		if(updateDto.getJobName() != null && !job.getJobName().equals(updateDto.getJobName())) {
 			job.setJobName(updateDto.getJobName());
 			updated = true;
 		}
-		if(!job.getDescription().equals(updateDto.getDescription())) {
+		if(updateDto.getDescription() != null && !job.getDescription().equals(updateDto.getDescription())) {
 			job.setDescription(updateDto.getDescription());
 			updated = true;
 		}
-		if(!job.getStatus().equals(updateDto.getStatus())) {
+		if(updateDto.getStatus() != null && !job.getStatus().equals(updateDto.getStatus())) {
 			job.setStatus(updateDto.getStatus());
 			updated = true;
 		}
-		if(!job.getEndDate().equals(updateDto.getEndDate())) {
+		if(updateDto.getEndDate() != null && !job.getEndDate().equals(updateDto.getEndDate())) {
 			if(!updateDto.getEndDate().after(job.getStartDate())) {
 				throw new InvalidDateException("End date must be after Satrt date");
 			}

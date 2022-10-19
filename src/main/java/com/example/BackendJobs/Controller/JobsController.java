@@ -217,7 +217,7 @@ public class JobsController {
 		} catch(JobsException e) {
 			throw e;
 		} catch(Exception e) {
-			return new ResponseEntity<>("Unable update Job", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>("Unable to update Job", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(newJob, HttpStatus.OK);
 	}
