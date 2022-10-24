@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.BackendJobs.Dto.JobUpdateDto;
@@ -34,7 +36,6 @@ public class JobsService {
 	
 	public Page<Jobs> getJobs(int pageNumber, Integer id, Status status, Boolean isActive, Timestamp startDate, Timestamp endDate){
 		pageNumber = pageNumber >= 0 ? pageNumber : 0;										//fallback to first page
-		Pageable page = PageRequest.of(pageNumber, 10);
 		
 		if(id == null) {
 			id = -1;
@@ -55,7 +56,8 @@ public class JobsService {
 		if(endDate != null) {
 			endDateString = StaticMethods.getDate(endDate);
 		}
-				
+		
+		Pageable page = PageRequest.of(pageNumber, 10);
 		Page<Jobs> pages = jobsRepo.getJobs(id, statusInt, isActiveInt, startDateString, endDateString, page);
 		return pages;
 	}
@@ -116,16 +118,23 @@ public class JobsService {
 			throw new InvalidIdException("Requested Job not found in server");
 		}
 		boolean updated = false;
+		if(updateDto.getStatus() != null && !job.getStatus().equals(updateDto.getStatus())) {
+			if(updateDto.getStatus().equals(Status.KILL)) {
+				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+				if(authentication == null || !authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+					throw new JobsException("Only Admin can KILL a job");
+				}
+			}
+			
+			job.setStatus(updateDto.getStatus());
+			updated = true;
+		}
 		if(updateDto.getJobName() != null && !job.getJobName().equals(updateDto.getJobName())) {
 			job.setJobName(updateDto.getJobName());
 			updated = true;
 		}
 		if(updateDto.getDescription() != null && !job.getDescription().equals(updateDto.getDescription())) {
 			job.setDescription(updateDto.getDescription());
-			updated = true;
-		}
-		if(updateDto.getStatus() != null && !job.getStatus().equals(updateDto.getStatus())) {
-			job.setStatus(updateDto.getStatus());
 			updated = true;
 		}
 		if(updateDto.getEndDate() != null && !job.getEndDate().equals(updateDto.getEndDate())) {
