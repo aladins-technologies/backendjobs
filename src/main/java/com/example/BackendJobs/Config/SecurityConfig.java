@@ -22,8 +22,9 @@ public class SecurityConfig {
 				.addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
 				.addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
 				.authorizeHttpRequests()
-				.antMatchers("/createJob", "/getJobs", "/updateJob").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-				.antMatchers("/deleteByIds", "/getUser", "/createOrUpdateUser").hasAuthority("ROLE_ADMIN")
+//				.antMatchers("/createJob", "/getJobs", "/updateJob").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+//				.antMatchers("/deleteByIds", "/getUser", "/createOrUpdateUser").hasAuthority("ROLE_ADMIN")
+				.anyRequest().authenticated()
 				.and().formLogin()
 				.and().httpBasic();
 		return http.build();
